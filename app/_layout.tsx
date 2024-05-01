@@ -58,13 +58,13 @@ function RootLayoutNav() {
   });
 
   return (
-    <ConvexProvider client={convex}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <ConvexProvider client={convex}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          {/* <Stack.Screen name="modal" options={{ presentation: "modal" }} /> */}
         </Stack>
-      </ThemeProvider>
-    </ConvexProvider>
+      </ConvexProvider>
+    </ThemeProvider>
   );
 }
