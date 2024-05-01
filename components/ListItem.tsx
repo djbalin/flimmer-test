@@ -1,4 +1,7 @@
 import { Text, View } from "@/components/Themed";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { useMutation } from "convex/react";
 import { Pressable } from "react-native";
 
 import { createStyleSheet, useStyles } from "react-native-unistyles";
@@ -6,11 +9,23 @@ import { createStyleSheet, useStyles } from "react-native-unistyles";
 export default function ListItem({
   title,
   content,
+  _id,
 }: {
   title: string;
   content: string;
+  _id: string;
 }) {
   const { styles } = useStyles(stylesheet);
+
+  const deleteSingleNote = useMutation(api.notes.deleteNote);
+
+  function deleteNote() {
+    async function deleteNoteData() {
+      const id = _id as Id<"notes">;
+      await deleteSingleNote({ id });
+    }
+    deleteNoteData();
+  }
   return (
     <View style={styles.listItem}>
       <View style={styles.noteContainer}>
@@ -21,7 +36,7 @@ export default function ListItem({
         <Pressable style={styles.button}>
           <Text>Redigér</Text>
         </Pressable>
-        <Pressable style={styles.button}>
+        <Pressable onPress={deleteNote} style={styles.button}>
           <Text>Slet</Text>
         </Pressable>
       </View>
