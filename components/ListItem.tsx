@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Modal, Pressable } from "react-native";
 
 import { createStyleSheet, useStyles } from "react-native-unistyles";
-import EditNoteForm from "./EditNoteForm";
+import NoteForm from "./NoteForm";
 
 export default function ListItem({
   title,
@@ -53,8 +53,8 @@ export default function ListItem({
           setModalVisible(!modalVisible);
         }}
       >
-        <EditNoteForm
-          noteData={{ title: title, content: content, _id: _id }}
+        <NoteForm
+          data={{ title: title, content: content, _id: _id }}
           setModalVisible={setModalVisible}
         />
       </Modal>

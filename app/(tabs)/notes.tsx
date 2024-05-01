@@ -1,5 +1,5 @@
 import ListItem from "@/components/ListItem";
-import NewNoteForm from "@/components/NewNoteForm";
+import NoteForm from "@/components/NoteForm";
 import { Text, View } from "@/components/Themed";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
@@ -42,7 +42,7 @@ export default function TabOneScreen() {
             setModalVisible(!modalVisible);
           }}
         >
-          <NewNoteForm setModalVisible={setModalVisible} />
+          <NoteForm data={null} setModalVisible={setModalVisible} />
         </Modal>
         <Pressable
           onPress={(e) => setModalVisible((prev) => !prev)}

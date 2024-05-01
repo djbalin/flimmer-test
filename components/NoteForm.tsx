@@ -1,14 +1,17 @@
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, TextInput } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 import { Text, View } from "./Themed";
 
-export default function NewNoteForm({
+export default function NoteForm({
   setModalVisible,
+  data,
 }: {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  data: null | { title: string; content: string; _id: string };
 }) {
   const { styles } = useStyles(stylesheet);
   const {
@@ -17,26 +20,48 @@ export default function NewNoteForm({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      title: "",
-      content: "",
+      title: data?.title ?? "",
+      content: data?.content ?? "",
     },
   });
 
   const addNote = useMutation(api.notes.addNote);
+  const updateNote = useMutation(api.notes.replaceNote);
 
-  function onSubmit(data: { title: string; content: string }) {
-    async function addNoteData() {
-      await addNote(data);
+  function onSubmit(formData: { title: string; content: string }) {
+    if (data == null) {
+      console.log("Data is null");
+      console.log(formData);
+
+      async function addNoteData() {
+        const newNoteData = {
+          title: formData.title,
+          content: formData.content,
+        };
+        await addNote(newNoteData);
+      }
+      addNoteData();
+    } else {
+      console.log("Data is not null");
+
+      async function updateNoteData() {
+        const newNoteData = {
+          title: formData.title,
+          content: formData.content,
+          id: data!._id as Id<"notes">,
+        };
+        await updateNote(newNoteData);
+      }
+      updateNoteData();
     }
-    addNoteData();
-
     setModalVisible(false);
   }
-
   return (
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text style={styles.modalText}>Tilføj ny note</Text>
+        <Text style={styles.modalText}>
+          {data ? "Redigér note" : "Tilføj ny note"}
+        </Text>
         <Controller
           control={control}
           rules={{
