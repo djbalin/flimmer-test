@@ -22,7 +22,11 @@ export default function TabOneScreen() {
         data={notes}
         keyExtractor={(note) => note._id}
         renderItem={(note) => (
-          <ListItem title={note.item.title} content={note.item.content} />
+          <ListItem
+            title={note.item.title}
+            content={note.item.content}
+            _id={note.item._id}
+          />
         )}
       />
       <View style={styles.addNoteContainer}>
