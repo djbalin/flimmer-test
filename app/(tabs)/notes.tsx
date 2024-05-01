@@ -1,19 +1,22 @@
 import ListItem from "@/components/ListItem";
+import NewNoteForm from "@/components/NewNoteForm";
 import { Text, View } from "@/components/Themed";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { FlatList, Pressable } from "react-native";
+import { useState } from "react";
+import { Alert, FlatList, Modal, Pressable } from "react-native";
 
-import { SafeAreaView } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 export default function TabOneScreen() {
   const { styles } = useStyles(stylesheet);
 
   const notes = useQuery(api.notes.getAll);
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    // <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         style={styles.listContainer}
         data={notes}
@@ -23,11 +26,26 @@ export default function TabOneScreen() {
         )}
       />
       <View style={styles.addNoteContainer}>
-        <Pressable style={styles.button}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <NewNoteForm setModalVisible={setModalVisible} />
+        </Modal>
+        <Pressable
+          onPress={(e) => setModalVisible((prev) => !prev)}
+          style={styles.button}
+        >
           <Text>Tilføj note</Text>
         </Pressable>
       </View>
-    </SafeAreaView>
+      {/* </SafeAreaView> */}
+    </View>
   );
 }
 
@@ -51,5 +69,30 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   listContainer: {
     // gap: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 }));

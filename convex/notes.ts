@@ -8,7 +8,6 @@ export const getAll = query({
   args: {},
   handler: async (ctx) => {
     const notes = await ctx.db.query("notes").collect();
-    console.log("heEEyy");
 
     return notes;
   },
