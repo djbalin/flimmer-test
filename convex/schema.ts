@@ -6,6 +6,6 @@ export default defineSchema({
   notes: defineTable({
     title: v.string(),
     content: v.string(),
-    _id: v.string(),
+    // _id: v.string(),
   }),
 });
