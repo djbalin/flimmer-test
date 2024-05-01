@@ -1,10 +1,10 @@
 import ListItem from "@/components/ListItem";
-import NewNoteForm from "@/components/NewNoteForm";
+import NoteForm from "@/components/NoteForm";
 import { Text, View } from "@/components/Themed";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useState } from "react";
-import { Alert, FlatList, Modal, Pressable } from "react-native";
+import { FlatList, Modal, Pressable } from "react-native";
 
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
@@ -17,29 +17,32 @@ export default function TabOneScreen() {
   return (
     // <SafeAreaView style={styles.container}>
     <View style={styles.container}>
-      <FlatList
-        style={styles.listContainer}
-        data={notes}
-        keyExtractor={(note) => note._id}
-        renderItem={(note) => (
-          <ListItem
-            title={note.item.title}
-            content={note.item.content}
-            _id={note.item._id}
-          />
-        )}
-      />
+      {notes && notes?.length > 0 ? (
+        <FlatList
+          style={styles.listContainer}
+          data={notes}
+          keyExtractor={(note) => note._id}
+          renderItem={(note) => (
+            <ListItem
+              title={note.item.title}
+              content={note.item.content}
+              _id={note.item._id}
+            />
+          )}
+        />
+      ) : (
+        <Text>Tilføj en note!</Text>
+      )}
       <View style={styles.addNoteContainer}>
         <Modal
           animationType="slide"
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
             setModalVisible(!modalVisible);
           }}
         >
-          <NewNoteForm setModalVisible={setModalVisible} />
+          <NoteForm data={null} setModalVisible={setModalVisible} />
         </Modal>
         <Pressable
           onPress={(e) => setModalVisible((prev) => !prev)}
@@ -57,7 +60,8 @@ const stylesheet = createStyleSheet((theme) => ({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    flexDirection: "column",
     alignItems: "center",
     backgroundColor: theme.colors.background,
   },

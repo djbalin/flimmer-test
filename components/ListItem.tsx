@@ -2,9 +2,11 @@ import { Text, View } from "@/components/Themed";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
-import { Pressable } from "react-native";
+import { useState } from "react";
+import { Modal, Pressable } from "react-native";
 
 import { createStyleSheet, useStyles } from "react-native-unistyles";
+import NoteForm from "./NoteForm";
 
 export default function ListItem({
   title,
@@ -16,9 +18,9 @@ export default function ListItem({
   _id: string;
 }) {
   const { styles } = useStyles(stylesheet);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const deleteSingleNote = useMutation(api.notes.deleteNote);
-
   function deleteNote() {
     async function deleteNoteData() {
       const id = _id as Id<"notes">;
@@ -33,13 +35,29 @@ export default function ListItem({
         <Text style={styles.itemContent}>{content}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.button}>
+        <Pressable
+          onPress={(e) => setModalVisible((prev) => !prev)}
+          style={styles.button}
+        >
           <Text>Redigér</Text>
         </Pressable>
         <Pressable onPress={deleteNote} style={styles.button}>
           <Text>Slet</Text>
         </Pressable>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <NoteForm
+          data={{ title: title, content: content, _id: _id }}
+          setModalVisible={setModalVisible}
+        />
+      </Modal>
     </View>
   );
 }

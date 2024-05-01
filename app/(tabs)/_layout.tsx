@@ -30,7 +30,9 @@ export default function TabLayout() {
         name="notes"
         options={{
           title: "Noter",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="paperclip" color={color} />
+          ),
           // headerRight: () => (
           //   <Link href="/modal" asChild>
           //     <Pressable>
