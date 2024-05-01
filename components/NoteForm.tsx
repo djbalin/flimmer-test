@@ -30,9 +30,6 @@ export default function NoteForm({
 
   function onSubmit(formData: { title: string; content: string }) {
     if (data == null) {
-      console.log("Data is null");
-      console.log(formData);
-
       async function addNoteData() {
         const newNoteData = {
           title: formData.title,
@@ -42,8 +39,6 @@ export default function NoteForm({
       }
       addNoteData();
     } else {
-      console.log("Data is not null");
-
       async function updateNoteData() {
         const newNoteData = {
           title: formData.title,
