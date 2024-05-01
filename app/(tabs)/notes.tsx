@@ -1,22 +1,11 @@
+import ListItem from "@/components/ListItem";
 import { Text, View } from "@/components/Themed";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { FlatList } from "react-native";
+import { FlatList, Pressable } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
-
-type ListItemProps = { title: string; content: string };
-
-function ListItem({ title, content }: { title: string; content: string }) {
-  const { styles } = useStyles(stylesheet);
-  return (
-    <View style={styles.listItem}>
-      <Text style={styles.itemTitle}>{title}</Text>
-      <Text style={styles.itemContent}>{content}</Text>
-    </View>
-  );
-}
 
 export default function TabOneScreen() {
   const { styles } = useStyles(stylesheet);
@@ -26,12 +15,18 @@ export default function TabOneScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
+        style={styles.listContainer}
         data={notes}
         keyExtractor={(note) => note._id}
         renderItem={(note) => (
           <ListItem title={note.item.title} content={note.item.content} />
         )}
       />
+      <View style={styles.addNoteContainer}>
+        <Pressable style={styles.button}>
+          <Text>Tilføj note</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
@@ -44,22 +39,17 @@ const stylesheet = createStyleSheet((theme) => ({
     alignItems: "center",
     backgroundColor: theme.colors.background,
   },
-  listItem: {
-    width: "100%",
-    color: theme.colors.typography,
-    padding: 20,
-    marginBottom: 10,
-    minWidth: "100%",
-    borderRadius: 10,
+
+  button: {
+    backgroundColor: theme.colors.background,
     borderWidth: 1,
+    padding: 8,
+    borderRadius: 5,
   },
-  itemTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: theme.colors.typography,
+  addNoteContainer: {
+    alignSelf: "flex-end",
   },
-  itemContent: {
-    fontSize: 14,
-    color: theme.colors.typography,
+  listContainer: {
+    // gap: 10,
   },
 }));
