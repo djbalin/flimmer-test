@@ -1,14 +1,17 @@
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, TextInput } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 import { Text, View } from "./Themed";
 
-export default function NewNoteForm({
+export default function EditNoteForm({
   setModalVisible,
+  noteData,
 }: {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  noteData: { title: string; content: string; _id: string };
 }) {
   const { styles } = useStyles(stylesheet);
   const {
@@ -17,18 +20,25 @@ export default function NewNoteForm({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      title: "",
-      content: "",
+      title: noteData.title,
+      content: noteData.content,
     },
   });
 
-  const addNote = useMutation(api.notes.addNote);
+  const updateNote = useMutation(api.notes.replaceNote);
 
   function onSubmit(data: { title: string; content: string }) {
-    async function addNoteData() {
-      await addNote(data);
+    console.log("ONSUBMIT EDIT CALLED");
+
+    async function updateNoteData() {
+      const newNoteData = {
+        title: data.title,
+        content: data.content,
+        id: noteData._id as Id<"notes">,
+      };
+      await updateNote(newNoteData);
     }
-    addNoteData();
+    updateNoteData();
 
     setModalVisible(false);
   }
@@ -36,7 +46,7 @@ export default function NewNoteForm({
   return (
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text style={styles.modalText}>Tilføj ny note</Text>
+        <Text style={styles.modalText}>Redigér note</Text>
         <Controller
           control={control}
           rules={{
@@ -73,7 +83,7 @@ export default function NewNoteForm({
         {errors.content && <Text>Skriv notens indhold</Text>}
         <View style={styles.buttonContainer}>
           <Pressable style={[styles.button]} onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.buttonText}>Gem ny note</Text>
+            <Text style={styles.buttonText}>Gem ændringer</Text>
           </Pressable>
           <Pressable
             style={[styles.button]}
