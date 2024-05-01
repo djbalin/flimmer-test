@@ -37,3 +37,10 @@ export const deleteNote = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+export const replaceNote = mutation({
+  args: { id: v.id("notes"), title: v.string(), content: v.string() },
+  handler: async (ctx, args) => {
+    await ctx.db.replace(args.id, { title: args.title, content: args.content });
+  },
+});

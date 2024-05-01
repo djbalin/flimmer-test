@@ -3,6 +3,8 @@ import { expect, test } from "vitest";
 import { api } from "./_generated/api";
 import schema from "./schema";
 
+// These tests are quite simple and do not exhaust all edge cases
+
 test("adding note works", async () => {
   const t = convexTest(schema);
   const noteId = await t.mutation(api.notes.addNote, {
@@ -56,11 +58,39 @@ test("delete note works", async () => {
     content: "hey content",
   });
 
-  const notesBefore = await t.query(api.notes.getAll);
-  expect(notesBefore).toHaveLength(2);
+  let notes = await t.query(api.notes.getAll);
+  expect(notes).toHaveLength(2);
 
   await t.mutation(api.notes.deleteNote, { id: note1 });
-  const notesAfter = await t.query(api.notes.getAll);
-  expect(notesAfter).toHaveLength(1);
-  expect(notesAfter[0]._id).toBe(note2);
+  notes = await t.query(api.notes.getAll);
+  expect(notes).toHaveLength(1);
+  expect(notes[0]._id).toBe(note2);
+});
+
+test("update note works", async () => {
+  const t = convexTest(schema);
+
+  const note1 = await t.mutation(api.notes.addNote, {
+    title: "hey title 1",
+    content: "hey content 1",
+  });
+
+  const note2 = await t.mutation(api.notes.addNote, {
+    title: "hey title 2",
+    content: "hey content 2",
+  });
+  let notes = await t.query(api.notes.getAll);
+
+  expect(notes).toHaveLength(2);
+  expect(notes[0].title).toBe("hey title 1");
+  expect(notes[1].title).toBe("hey title 2");
+
+  await t.mutation(api.notes.replaceNote, {
+    id: note1,
+    title: "new title",
+    content: "new content",
+  });
+  notes = await t.query(api.notes.getAll);
+  expect(notes[0].title).toBe("new title");
+  expect(notes[1].title).toBe("hey title 2");
 });
