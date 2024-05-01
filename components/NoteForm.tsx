@@ -2,7 +2,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, TextInput } from "react-native";
+import { Pressable, SafeAreaView, TextInput } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 import { Text, View } from "./Themed";
 
@@ -52,7 +52,7 @@ export default function NoteForm({
     setModalVisible(false);
   }
   return (
-    <View style={styles.centeredView}>
+    <SafeAreaView style={styles.centeredView}>
       <View style={styles.modalView}>
         <Text style={styles.modalText}>
           {data ? "Redigér note" : "Tilføj ny note"}
@@ -82,6 +82,10 @@ export default function NoteForm({
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={styles.input}
+              multiline={true}
+              lineBreakStrategyIOS="standard"
+              textBreakStrategy="simple"
+              // maxLength={15}
               placeholder="Indhold"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -103,7 +107,7 @@ export default function NoteForm({
           </Pressable>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -117,13 +121,14 @@ const stylesheet = createStyleSheet((theme) => ({
     fontSize: 12,
   },
   buttonText: {
-    fontSize: 12,
+    fontSize: theme.fontSizes.md,
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalView: {
     // margin: 20,
@@ -143,8 +148,8 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   modalText: {
     marginBottom: 15,
-    fontSize: 20,
-    fontWeight: "600",
+    fontSize: theme.fontSizes.xl,
+    fontWeight: "bold",
     textAlign: "center",
   },
   buttonContainer: {
@@ -158,7 +163,7 @@ const stylesheet = createStyleSheet((theme) => ({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 5,
-    minWidth: 200,
-    width: "100%",
+    // minWidth: 200,
+    width: 200,
   },
 }));

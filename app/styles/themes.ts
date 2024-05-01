@@ -1,3 +1,10 @@
+const fontSizes = {
+  sm: 12,
+  md: 16,
+  lg: 20,
+  xl: 24,
+};
+
 export const lightTheme = {
   colors: {
     typography: "#000000",
@@ -9,6 +16,7 @@ export const lightTheme = {
     lg: 8,
     xl: 12,
   },
+  fontSizes: fontSizes,
 } as const;
 
 export const darkTheme = {
@@ -22,6 +30,7 @@ export const darkTheme = {
     lg: 8,
     xl: 12,
   },
+  fontSizes: fontSizes,
 } as const;
 
 // define other themes

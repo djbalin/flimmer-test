@@ -85,12 +85,12 @@ const stylesheet = createStyleSheet((theme) => ({
   },
 
   itemTitle: {
-    fontSize: 20,
+    fontSize: theme.fontSizes.xl,
     fontWeight: "bold",
     color: theme.colors.typography,
   },
   itemContent: {
-    fontSize: 14,
+    fontSize: theme.fontSizes.md,
     color: theme.colors.typography,
   },
   button: {
