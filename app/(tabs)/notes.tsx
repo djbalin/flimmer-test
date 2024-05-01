@@ -35,18 +35,7 @@ export default function TabOneScreen() {
             setModalVisible(!modalVisible);
           }}
         >
-          <NewNoteForm />
-          {/* <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
-              <Pressable
-                style={[styles.button]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text>Hide Modal</Text>
-              </Pressable>
-            </View>
-          </View> */}
+          <NewNoteForm setModalVisible={setModalVisible} />
         </Modal>
         <Pressable
           onPress={(e) => setModalVisible((prev) => !prev)}

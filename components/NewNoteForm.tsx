@@ -1,33 +1,144 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { api } from "@/convex/_generated/api";
+import { useMutation } from "convex/react";
+import { Controller, useForm } from "react-hook-form";
+import { Pressable, TextInput } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { Text, View } from "./Themed";
 
-type Inputs = {
-  example: string;
-  exampleRequired: string;
-};
-// Based on https://react-hook-form.com/get-started
-export default function NewNoteForm() {
+export default function NewNoteForm({
+  setModalVisible,
+}: {
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { styles } = useStyles(stylesheet);
   const {
-    register,
+    control,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  } = useForm({
+    defaultValues: {
+      title: "",
+      content: "",
+    },
+  });
 
-  console.log(watch("example")); // watch input value by passing the name of it
+  const addNote = useMutation(api.notes.addNote);
+
+  function onSubmit(data: { title: string; content: string }) {
+    async function addNoteData() {
+      await addNote(data);
+    }
+    addNoteData();
+
+    setModalVisible(false);
+  }
 
   return (
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {/* register your input into the hook by invoking the "register" function */}
-      <input defaultValue="test" {...register("example")} />
-
-      {/* include validation with required or other standard HTML validation rules */}
-      <input {...register("exampleRequired", { required: true })} />
-      {/* errors will return when field validation fails  */}
-      {errors.exampleRequired && <span>This field eis required</span>}
-
-      <input type="submit" />
-    </form>
+    <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+        <Text style={styles.modalText}>Tilføj ny note</Text>
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder="Titel"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          name="title"
+        />
+        {errors.title && <Text>Giv noten et navn</Text>}
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              placeholder="Indhold"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          name="content"
+        />
+        {errors.content && <Text>Skriv notens indhold</Text>}
+        <View style={styles.buttonContainer}>
+          <Pressable style={[styles.button]} onPress={handleSubmit(onSubmit)}>
+            <Text style={styles.buttonText}>Gem note</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.button]}
+            onPress={(e) => setModalVisible(false)}
+          >
+            <Text style={styles.buttonText}>Luk</Text>
+          </Pressable>
+        </View>
+      </View>
+    </View>
   );
 }
+
+const stylesheet = createStyleSheet((theme) => ({
+  button: {
+    backgroundColor: theme.colors.background,
+    borderWidth: 1,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+    fontSize: 12,
+  },
+  buttonText: {
+    fontSize: 12,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+  },
+  modalView: {
+    // margin: 20,
+    gap: 10,
+    backgroundColor: theme.colors.background,
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    fontSize: 20,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  buttonContainer: {
+    gap: 30,
+    marginTop: 30,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  input: {
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 5,
+    minWidth: 200,
+    width: "100%",
+  },
+}));
