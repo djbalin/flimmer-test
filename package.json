@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.0.2",
     "convex": "^1.11.2",
     "expo": "~50.0.17",
+    "expo-dev-client": "~3.3.11",
     "expo-font": "~11.10.3",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.10",
@@ -31,8 +32,8 @@
     "react-native-get-random-values": "^1.11.0",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "react-native-web": "~0.19.6",
-    "expo-dev-client": "~3.3.11"
+    "react-native-unistyles": "^2.7.2",
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
